@@ -71,7 +71,7 @@ class ProductController{
 
             for ($i=0; $i < count($_FILES['list_image']['name']); $i++) { 
                 move_uploaded_file($name_file_son['tmp_name'][$i], "public/assets/images_product/".$name_file_son['name'][$i]);
-                $this->modellist_p_image->save_list_image_product($idproduct, $name_file_son['name'][$i], $i);
+                $this->modellist_p_image->save_list_image_product($idproduct, $name_file_son['name'][$i], $i, $name_file_son['size'][$i]);
             }
 
             move_uploaded_file($temp_file, "public/assets/images_product/$name_file");
@@ -178,6 +178,9 @@ class ProductController{
                     // echo '--------------------------------------</br>';
                     for ($i=0; $i < count($array_link); $i++) {
                         $linking = implode('-', $array_link[$i]);
+                        if(isset($images_attribute['name'][$i]) && !empty($images_attribute['name'][$i])){
+                            move_uploaded_file($images_attribute['tmp_name'][$i], "public/assets/images_variant/".$images_attribute['name'][$i]);
+                        }
                         // echo 'từ mảng thành chuỗi thứ '.$i.' ( '.$linking.' )</br>';
                         // echo 'hình ảnh thứ '.$i.' ( '.$images_attribute['name'][$i].' )</br>';
                         // echo 'giá tiền thứ '.$i.' ( '.$price_attribute[$i].' )</br>';
@@ -226,12 +229,381 @@ class ProductController{
     }
 
     function show(){
-        $link_css = Linkfile::LINKCSS[1];
+        global $params;
+        $id = $params['id'];
+        $allCategories = $this->modelcate->all_categories();
+        $detail = $this->modelpro->detail_product($id);
+        $list_image = $this->modellist_p_image->show_list_image_product($id);
+        $show_variant_name = $this->modelvariant->show_variant_name($id);
+        
+        if(isset($show_variant_name) && !empty($show_variant_name)){
+            $show_linking_variant_attributes = $this->modelvariant->show_linking_variant_attributes($id);
+
+
+            $arrvalue = [];
+            $flag_lapvalue = 0;
+            foreach ($show_variant_name as $i) {
+                $show_variant_attribute = $this->modelvariant->show_variant_attribute($i['id']);
+                foreach ($show_variant_attribute as $j) {
+
+                    $arrvalue[$flag_lapvalue] = [$j['id'], $j['idvariantname'], $j['value_variant']];
+                    // echo 'id '.$i['id'].'</br>';
+                    // echo 'idvariantname '.$i['idvariantname'].'</br>';
+                    // echo 'value_variant '.$i['value_variant'].'</br>';
+                    // echo '-------------------------</br>';
+                    $flag_lapvalue++;
+                }
+            }
+
+            $arrlinking = [];
+            $flag_linking = 0;
+            foreach ($show_linking_variant_attributes as $i) {
+                $arrplolinking = explode('-', $i['linking']);
+
+                $arrlinking[$flag_linking] = [$i['id'], $i['idproduct'], $arrplolinking, $i['price'], $i['quantity'], $i['image']];
+                // echo 'id '.$i['id'].'</br>';
+                // echo 'idproduct '.$i['idproduct'].'</br>';
+                // echo 'linking '.$i['linking'].'</br>';
+                // echo 'price '.$i['price'].'</br>';
+                // echo 'quantity '.$i['quantity'].'</br>';
+                // echo 'image '.$i['image'].'</br>';
+                // echo '-------------------------</br>';
+                $flag_linking++;
+            }
+            
+
+            for ($i=0; $i < count($arrlinking); $i++) { 
+                // echo "<pre>";
+                // var_export($arrlinking);
+                // echo "</pre>";
+                
+
+                for ($j=0; $j < count($arrlinking[$i][2]); $j++) { 
+                    // echo "<pre>";
+                    // var_export($arrlinking[$i][2][$j]);
+                    // echo "</pre>";
+
+                    for ($k=0; $k < count($arrvalue); $k++) { 
+                        if($arrvalue[$k][0] == $arrlinking[$i][2][$j]){
+                            // thay so sánh mảng linking sao đó thêm giá trị
+                            $arrlinking[$i][2][$j] = $arrlinking[$i][2][$j].'%-%'.$arrvalue[$k][2];
+                            // $arrlinking[$i] = $arrvalue[$k][2];
+                        }
+                    }
+                }
+            }
+
+            // hiển thị show_variant_attribute
+            // echo "<pre>";
+            // var_export($arrvalue);
+            // echo "</pre>";
+
+            // hiển thị linking_variant_attributes
+            // echo "<pre>";
+            // var_export($arrlinking);
+            // echo "</pre>";
+        }
+        // echo "<pre>";
+        // var_export($arrlinking);
+        // echo "</pre>";
+
+        // array (
+        //     0 => 80,
+        //     1 => 92,
+        //     2 => 
+        //     array (
+        //       0 => '147%-%vàng',
+        //       1 => '148%-%S',
+        //     ),
+        //     3 => 0,
+        //     4 => 30,
+        //     5 => 'bong den.png',
+        //   ),
+        $link_css = Linkfile::LINKCSS[3];
         $link_js = Linkfile::LINKJS[4]; 
         $view_content = "view/admin/edit_product.php";
         include_once "view/admin/layout.php";
     }
     function edit(){
+
+        $id = $_POST['id'];
+        $allCategories = $this->modelcate->all_categories();
+        $detail = $this->modelpro->detail_product($id);
+        $list_image = $this->modellist_p_image->show_list_image_product($id);
+        $show_variant_name = $this->modelvariant->show_variant_name($id);
+
+
+        $name_file = $_FILES['image']['name'];
+        $temp_file = $_FILES['image']['tmp_name'];
+
+        $name_file_son = $_FILES['list_image'];
+        $name_file_valit_son = $_FILES['list_image']['name'][0];
+
+        $idcategory = $_POST['idcategory'];
+        $name = trim(strip_tags($_POST['name']));
+        $name_slug = $this->name_slug($name);
+        $detailed_description = (strlen($_POST['detailed_description']) <= 50) ? null : $_POST['detailed_description'];
+        $product_summary = trim(strip_tags($_POST['product_summary']));
+        $price = (int) $_POST['price'];
+        $quantity = ($_POST['quantity'] == '') ?  999 : (int) $_POST['quantity'];
+        $hot = (int) $_POST['hot'];
+        $status = (int) $_POST['status'];
+
+        
+
+        if(strlen($product_summary) <= 5 || $name == '' || strlen($name) >= 255 || $price == '' || $price >= 10000000000 || $idcategory == 0){
+            $notification = false;
+        }
+        elseif($name_file == ''){
+            $name_file = $detail['image'];
+            $this->modelpro->update_product($id, $idcategory,$name,$name_file,$detailed_description,$product_summary,$price,$quantity,$hot,$status,$name_slug);
+            $notification = true;
+
+            if(!empty($name_file_valit_son)){
+                $idproduct = $this->modellist_p_image->remove_list_image_product($id);
+                for ($i=0; $i < count($_FILES['list_image']['name']); $i++) { 
+                    move_uploaded_file($name_file_son['tmp_name'][$i], "public/assets/images_product/".$name_file_son['name'][$i]);
+                    $this->modellist_p_image->save_list_image_product($id, $name_file_son['name'][$i], $i, $name_file_son['size'][$i]);
+                }
+            }
+
+            
+            if(isset($_POST['quantity_attribute']) && !empty($_POST['quantity_attribute'])){
+                $quantity_attribute = $_POST['quantity_attribute'];
+                $id_linking_variant = $_POST['id_linking_variant'];
+                $price_attribute = $_POST['price_attribute'];
+                for ($i=0; $i < count($quantity_attribute); $i++) { 
+                    $this->modelvariant->update_linking_variant_attributes($id_linking_variant[$i], $quantity_attribute[$i], $price_attribute[$i]);
+                    // echo "id ( ".$id_linking_variant[$i]." )<br>";
+                    // echo "số lượng ( ".$quantity_attribute[$i]." )<br>";
+                    // echo "giá ( ".$price_attribute[$i]." )<br>";
+                    // echo "---------------------<br>";
+                }
+            }
+    
+        }
+        else{
+            $idproduct = $this->modelpro->update_product($id, $idcategory,$name,$name_file,$detailed_description,$product_summary,$price,$quantity,$hot,$status,$name_slug);
+            move_uploaded_file($temp_file, "public/assets/images_product/$name_file");
+
+            if(!empty($name_file_valit_son)){
+                $this->modellist_p_image->remove_list_image_product($id);
+                for ($i=0; $i < count($_FILES['list_image']['name']); $i++) { 
+                    move_uploaded_file($name_file_son['tmp_name'][$i], "public/assets/images_product/".$name_file_son['name'][$i]);
+                    $this->modellist_p_image->save_list_image_product($id, $name_file_son['name'][$i], $i, $name_file_son['size'][$i]);
+                }
+            }
+
+            
+            
+            if(isset($_POST['quantity_attribute']) && !empty($_POST['quantity_attribute'])){
+                $quantity_attribute = $_POST['quantity_attribute'];
+                $id_linking_variant = $_POST['id_linking_variant'];
+                $price_attribute = $_POST['price_attribute'];
+                for ($i=0; $i < count($quantity_attribute); $i++) { 
+                    $this->modelvariant->update_linking_variant_attributes($id_linking_variant[$i], $quantity_attribute[$i], $price_attribute[$i]);
+                    // echo "id ( ".$id_linking_variant[$i]." )<br>";
+                    // echo "số lượng ( ".$quantity_attribute[$i]." )<br>";
+                    // echo "giá ( ".$price_attribute[$i]." )<br>";
+                    // echo "---------------------<br>";
+                }
+            }
+
+
+
+            $notification = true;
+        }
+
+         // var_export($id_linking_variant);
+         
+        
+        // 
+        // 
+        // 
+        // hiển thị gia diện
+        // 
+        // 
+        $allCategories = $this->modelcate->all_categories();
+        $detail = $this->modelpro->detail_product($id);
+        $list_image = $this->modellist_p_image->show_list_image_product($id);
+        $show_variant_name = $this->modelvariant->show_variant_name($id);
+
+        if(isset($show_variant_name) && !empty($show_variant_name)){
+            $show_linking_variant_attributes = $this->modelvariant->show_linking_variant_attributes($id);
+
+
+            $arrvalue = [];
+            $flag_lapvalue = 0;
+            foreach ($show_variant_name as $i) {
+                $show_variant_attribute = $this->modelvariant->show_variant_attribute($i['id']);
+                foreach ($show_variant_attribute as $j) {
+
+                    $arrvalue[$flag_lapvalue] = [$j['id'], $j['idvariantname'], $j['value_variant']];
+                    // echo 'id '.$i['id'].'</br>';
+                    // echo 'idvariantname '.$i['idvariantname'].'</br>';
+                    // echo 'value_variant '.$i['value_variant'].'</br>';
+                    // echo '-------------------------</br>';
+                    $flag_lapvalue++;
+                }
+            }
+
+            $arrlinking = [];
+            $flag_linking = 0;
+            foreach ($show_linking_variant_attributes as $i) {
+                $arrplolinking = explode('-', $i['linking']);
+
+                $arrlinking[$flag_linking] = [$i['id'], $i['idproduct'], $arrplolinking, $i['price'], $i['quantity'], $i['image']];
+                // echo 'id '.$i['id'].'</br>';
+                // echo 'idproduct '.$i['idproduct'].'</br>';
+                // echo 'linking '.$i['linking'].'</br>';
+                // echo 'price '.$i['price'].'</br>';
+                // echo 'quantity '.$i['quantity'].'</br>';
+                // echo 'image '.$i['image'].'</br>';
+                // echo '-------------------------</br>';
+                $flag_linking++;
+            }
+            
+
+            for ($i=0; $i < count($arrlinking); $i++) { 
+                // echo "<pre>";
+                // var_export($arrlinking);
+                // echo "</pre>";
+                
+
+                for ($j=0; $j < count($arrlinking[$i][2]); $j++) { 
+                    // echo "<pre>";
+                    // var_export($arrlinking[$i][2][$j]);
+                    // echo "</pre>";
+
+                    for ($k=0; $k < count($arrvalue); $k++) { 
+                        if($arrvalue[$k][0] == $arrlinking[$i][2][$j]){
+                            // thay so sánh mảng linking sao đó thêm giá trị
+                            $arrlinking[$i][2][$j] = $arrlinking[$i][2][$j].'%-%'.$arrvalue[$k][2];
+                            // $arrlinking[$i] = $arrvalue[$k][2];
+                        }
+                    }
+                }
+            }
+        }
+
+       
+        $link_css = Linkfile::LINKCSS[3];
+        $link_js = Linkfile::LINKJS[4]; 
+        $view_content = "view/admin/edit_product.php";
+        include_once "view/admin/layout.php";
+
+
+        // xử lý biến thể
+        // if(isset($idproduct) && !empty($idproduct)){
+        
+        //     if(isset($_POST['quantity_attribute'])){
+        //         for ($i=0; $i < count($_POST['name_variant']); $i++) {
+        //             $idname = $this->modelvariant->save_variant_name($idproduct, $_POST['name_variant'][$i]);
+        //             $arrayname[$_POST['name_variant'][$i]] = $idname;
+
+        //             // $this->modelvariant->save_variant_attribute($idname, );
+        //        }
+        //        $countvariant = 0;
+
+        //         for ($i=0; $i < count($_POST['quantity_attribute']); $i++) { 
+                    
+        //            if($_POST['quantity_attribute'][$i] !== ''){
+        //                 $countvariant++;
+        //            }
+        //         }
+                
+        //         echo $countvariant.' có giá trị';
+        //         if($countvariant > 0){
+        //             $name_attribute = $_POST['name_attribute'];
+        //             $value_attribute = $_POST['value_attribute'];
+        //             $tinhsolanlap = $countvariant * count($arrayname);
+
+        //             // $arrayvaluenotalike = array_unique($value_attribute);
+
+        //             // for ($i=0; $i < $tinhsolanlap; $i++) {
+        //             //     for ($j=0; $j < count($arrayvaluenotalike); $j++) { 
+        //             //         if($arrayvaluenotalike[$j] == $value_attribute[$i]){
+        //             //             $objectab[$arrayvaluenotalike[$j]] = 
+        //             //         }
+        //             //     }
+        //             // }
+        //             // echo '<pre>';
+        //             //     var_export(array_unique($value_attribute));
+        //             // echo '</pre>';
+
+        //             // echo $tinhsolanlap.' thuộc tính cần lấy</br>';
+        //             for ($i=0; $i < $tinhsolanlap; $i++) { 
+        //                 foreach ($arrayname as $key => $value) {
+        //                     // echo 'mảng arrayname có key = '.$key.' và giá trị = '.$value.'</br>';
+        //                     if($name_attribute[$i] == $key){
+        //                         $objvalue[$value_attribute[$i]] = $value;
+        //                         // echo 'giá trị '.$value_attribute[$i].' có tên biến thể là '.$name_attribute[$i].' thuộc trong key ( '.$key.' ) và có id ( '.$value.' )</br>';
+        //                         // $this->modelvariant->save_variant_attribute($value, $value_attribute[$i]);
+        //                     }
+        //                 }
+
+        //             }
+
+        //             // thêm giá trị bào bảng variant attribute và lấy id sau khi thêm
+        //             foreach ($objvalue as $key => $value) {
+        //                 $idattribute = $this->modelvariant->save_variant_attribute($value, $key);
+        //                 $objattri[$key] = $idattribute;
+        //             }
+                    
+        //             $flag_name = 0;
+        //             $demarray = 0;
+        //             $array_link = [];
+        //             for ($i=0; $i < $tinhsolanlap; $i++) { 
+                        
+        //                 foreach ($objattri as $key => $value) {
+        //                     if($value_attribute[$i] == $key){
+        //                         $array_link[$demarray][$flag_name] = $value;
+        //                         // $array_link[$demarray] += $value;
+        //                     }
+        //                 }
+                        
+                        
+        //                 $flag_name++;
+        //                 if($flag_name == count($arrayname)){
+        //                     $flag_name = 0;
+        //                     $demarray++;
+        //                 }
+    
+        //             }
+
+        //             $images_attribute = $_FILES['images_attribute'];
+        //             $price_attribute = $_POST['price_attribute'];
+        //             $quantity_attribute = $_POST['quantity_attribute'];
+        //             // echo '--------------------------------------</br>';
+        //             for ($i=0; $i < count($array_link); $i++) {
+        //                 $linking = implode('-', $array_link[$i]);
+        //                 if(isset($images_attribute['name'][$i]) && !empty($images_attribute['name'][$i])){
+        //                     move_uploaded_file($images_attribute['tmp_name'][$i], "public/assets/images_variant/".$images_attribute['name'][$i]);
+        //                 }
+        //                 // echo 'từ mảng thành chuỗi thứ '.$i.' ( '.$linking.' )</br>';
+        //                 // echo 'hình ảnh thứ '.$i.' ( '.$images_attribute['name'][$i].' )</br>';
+        //                 // echo 'giá tiền thứ '.$i.' ( '.$price_attribute[$i].' )</br>';
+        //                 // echo 'số lượng thứ '.$i.' ( '.$quantity_attribute[$i].' )</br>';
+        //                 // echo '--------------------------------------</br>';
+        //                 $this->modelvariant->save_linking_variant_attributes($idproduct, $linking, $quantity_attribute[$i], $price_attribute[$i], $images_attribute['name'][$i]);
+        //             }
+
+                    
+
+        //             // echo "mảng đếm array link";
+        //             // echo '<pre>';
+        //             //     var_export($array_link);
+        //             // echo '</pre>';
+
+
+        //         }
+        //     }
+        //     // else{
+        //     //     echo 'không có biến thể nào';
+        //     // }
+
+        // }
+        // kết thúc xử lý
 
     }
     function destroy(){

@@ -52,8 +52,7 @@ class Linkfile{
                 <script src="public/assets/js/buil.js"></script>
                 <script src="public/assets/js/vendor.min.js"></script>
                 <script src="public/assets/libs/select2/js/select2.min.js"></script>
-                <script src="public/assets/libs/dropzone/min/dropzone.min.js"></script>
-                
+                <script src="public/assets/libs/dropzone/min/dropzone.min.js"></script>=
                 <script src="public/assets/libs/quill/quill.min.js"></script>
                 <script src="public/assets/js/pages/form-fileuploads.init.js"></script>
                 <script src="public/assets/js/pages/add-product.init.js"></script>

@@ -31,4 +31,31 @@ class variantProduct extends connectDB {
         $id = $this->conn->lastInsertId();
         return $id;
     }
+
+    function update_linking_variant_attributes($id, $quantity, $price){
+        $sql ="UPDATE linking_variant_attributes SET quantity=:quantity, price=:price WHERE id=:id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":quantity", $quantity, PDO::PARAM_INT);
+        $stmt->bindParam(":price", $price, PDO::PARAM_INT);
+        $stmt->execute();
+        return true;
+    }
+
+    function show_variant_name($idproduct){
+        $sql = "SELECT id, name FROM variant_name WHERE idproduct = $idproduct";
+        return $this ->query($sql);
+    }
+    
+    function show_variant_attribute($idvariantname){
+        $sql = "SELECT * FROM variant_attribute WHERE idvariantname = $idvariantname";
+        return $this ->query($sql);
+    }
+    
+    function show_linking_variant_attributes($idproduct){
+        $sql = "SELECT * FROM linking_variant_attributes WHERE idproduct = $idproduct";
+        return $this ->query($sql);
+    }
+
+
 }

@@ -18,11 +18,10 @@
                             <div class="col-lg-4 col-xl-4"></div> <!-- end col -->
 
                             <div class="col-lg-4 col-xl-4">
-                                <form>
+                                <form action="<?=ROOT_URL?>edit_profile" method="post" enctype="multipart/form-data">
                                     <div class="card text-center">
                                         <div class="card-body">
                                             
-
                                 
 
                                             <div class="position-relative d-inline-block">
@@ -62,7 +61,7 @@
                                             </div>                                    
                                             
 
-                                            <button type="button" class="btn btn-success waves-effect waves-light">Lưu</button>
+                                            <button type="submit" class="btn btn-success waves-effect waves-light">Lưu</button>
                                                                             
                                         </div>                                 
                                     </div> <!-- end card -->

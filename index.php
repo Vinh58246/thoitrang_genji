@@ -82,8 +82,9 @@ $router = [
         'add_news' => [new NewsController, 'store'],
         'edit_news' => [new NewsController, 'edit'],
         'destroy_news' => [new NewsController, 'destroy_list'],
-
         
+        
+        'edit_profile' => [new ProfileController, 'edit'],
         
     ]
 ];

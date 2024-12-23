@@ -34,7 +34,7 @@ class category extends connectDB {
     function update_category($id, $image, $name, $status, $display_order, $slug){
         $sql ="UPDATE categories SET name=:name,  image=:image, status=:status, display_order=:display_order, slug=:slug WHERE id=:id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":id", $id, PDO::PARAM_STR);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->bindParam(":image", $image, PDO::PARAM_STR);
         $stmt->bindParam(":name", $name, PDO::PARAM_STR);
         $stmt->bindParam(":slug", $slug, PDO::PARAM_STR);

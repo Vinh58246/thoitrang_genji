@@ -40,6 +40,24 @@ class product extends connectDB {
         $id = $this->conn->lastInsertId();
         return $id;
     }
+    function update_product($id, $idcategory, $name, $image, $detailed_description, $product_summary, $price, $quantity, $hot, $status, $slug){
+        $sql = "UPDATE products SET idcategory=:idcategory, name=:name, image=:image, detailed_description=:detailed_description,  product_summary=:product_summary, price=:price, quantity=:quantity, hot=:hot, status=:status, slug=:slug WHERE id=:id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":idcategory", $idcategory, PDO::PARAM_INT);
+        $stmt->bindParam(":name", $name, PDO::PARAM_STR);
+        $stmt->bindParam(":image", $image, PDO::PARAM_STR);
+        $stmt->bindParam(":detailed_description", $detailed_description, PDO::PARAM_STR);
+        $stmt->bindParam(":product_summary", $product_summary, PDO::PARAM_STR);
+        $stmt->bindParam(":price", $price, PDO::PARAM_INT);
+        $stmt->bindParam(":quantity", $quantity, PDO::PARAM_INT);
+        $stmt->bindParam(":hot", $hot, PDO::PARAM_INT);
+        $stmt->bindParam(":status", $status, PDO::PARAM_INT);
+        $stmt->bindParam(":slug", $slug, PDO::PARAM_STR);
+        $stmt->execute();
+        $id = $this->conn->lastInsertId();
+        return $id;
+    }
     function delete_product($id){
         $sql = "DELETE FROM products WHERE id=:id";
         $stmt = $this->conn->prepare($sql);

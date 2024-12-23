@@ -59,7 +59,7 @@
 
                                         <div class="mb-3">
                                             <label for="product-meta-title" class="form-label">Tiêu đề bài viết <span class="text-danger">*</span></label>
-                                            <input type="text" name="title" value="<?=$detail['title']?>" class="form-control" id="product-meta-title" placeholder="Enter title">
+                                            <input type="text" name="title" value='<?=$detail['title']?>' class="form-control" id="product-meta-title" placeholder="Enter title">
                                         </div>
 
                                         <div class="mb-3">

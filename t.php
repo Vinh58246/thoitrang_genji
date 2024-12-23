@@ -1,12 +1,8 @@
 <?php
-$flag_name = 0;
-for ($i=0; $i < 19; $i++) { 
-    echo $flag_name;
+$arr = array(10, 30, 40, 50, 70); 
 
-
-    $flag_name++;
-    if($flag_name == 3){
-        $flag_name = 0;
-    }
-}
+$arr[1] = [145, 'xin chào'];
+echo '<pre>';
+var_export($arr);
+echo '</pre>';
 ?>

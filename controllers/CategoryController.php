@@ -90,8 +90,6 @@ class CategoryController{
         $link_js = Linkfile::LINKJS[4];
         $view_content = "view/admin/edit_category.php";
         include_once "view/admin/layout.php";
-
-        echo "<h1>đã sửa</h1>";
     }
     function destroy(){
         try{
