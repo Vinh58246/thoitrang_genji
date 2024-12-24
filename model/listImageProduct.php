@@ -22,7 +22,7 @@ class listImageProduct extends connectDB {
     function remove_list_image_product($idproduct){
         $sql = "DELETE FROM list_image_product WHERE idproduct=:idproduct";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":idproduct", $idproduct, PDO:: PARAM_STR);
+        $stmt->bindParam(":idproduct", $idproduct, PDO:: PARAM_INT);
         $stmt->execute();
         if($stmt->rowCount() > 0){
             return true;

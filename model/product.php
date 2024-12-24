@@ -61,7 +61,7 @@ class product extends connectDB {
     function delete_product($id){
         $sql = "DELETE FROM products WHERE id=:id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":id", $id, PDO:: PARAM_STR);
+        $stmt->bindParam(":id", $id, PDO:: PARAM_INT);
         $stmt->execute();
         if($stmt->rowCount() > 0){
             return true;

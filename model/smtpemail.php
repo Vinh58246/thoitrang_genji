@@ -7,9 +7,9 @@
     require 'phpmailer/PHPMailer.php';
     require 'phpmailer/SMTP.php';
 
-    include_once "config.php";
+    include_once BASE_DIR."/config.php";
 
-    function send_mail($to,$subject,$body,$manganh){
+    function send_mail($to,$body){
         
         $mail = new PHPMailer(true);
 
@@ -30,20 +30,17 @@
 
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
-            $mail->Subject = $subject;
+            $mail->Subject = subject_email;
             $mail->Body    = $body;
-            if(isset($manganh) && !empty($manganh)){
-                foreach ($manganh as $anh) {
-                    $mail->AddEmbeddedImage("assets/images/$anh[0].$anh[1]", "$anh[0]");
-                }
-                $mail->AddEmbeddedImage("logo-sw.png", "logo");
-            }
             $mail->send();
-            $thongbao_email = 'Message has been sent';
+            $thongbao_email = true;
             return $thongbao_email;
         } catch (Exception $e) {
-            $thongbao_email = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            // $thongbao_email = "Lỗi gửi email. Mailer Error: {$mail->ErrorInfo}";
+            $thongbao_email = false;
             return $thongbao_email;
         }
     }
+
+
 ?>

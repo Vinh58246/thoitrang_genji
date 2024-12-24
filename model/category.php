@@ -46,7 +46,7 @@ class category extends connectDB {
     function delete_category($id){
         $sql = "DELETE FROM categories WHERE id=:id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":id", $id, PDO:: PARAM_STR);
+        $stmt->bindParam(":id", $id, PDO:: PARAM_INT);
         $stmt->execute();
         if($stmt->rowCount() > 0){
             return true;

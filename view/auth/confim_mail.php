@@ -24,18 +24,41 @@
                                     <p class="text-muted mb-4 mt-3">Mã đã được gửi đến email của bạn.</p>
                                 </div>
 
-                                <form action="#">
+                                <form action="<?=ROOT_URL?>__confim_mail" method="post">
+                                    <?php
+                                        if(isset($notification)){
+                                            if($notification == false){
+                                                echo '
+                                                <div class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    <i class="mdi mdi-block-helper me-2"></i> Nhập mã thất bại!
+                                                </div>
+                                                ';
+                                            }
+                                        }
 
+                                        if(isset($_SESSION['notification']['auth'])){
+                                            if($_SESSION['notification']['auth'] == 1){
+                                                echo '
+                                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <i class="mdi mdi-check-all me-2"></i> Chúng tôi đã gửi mail lại cho bạn!
+                                                    </div>
+                                                    ';
+                                                unset($_SESSION['notification']['auth']);
+                                            }
+                                        };
+                                    ?>
                                     <div class="mb-3">
                                         <label for="mailcode" class="form-label">Mã</label>
-                                        <input class="form-control" type="email" id="mailcode" required="" placeholder="Nhập mã của bạn">
+                                        <input class="form-control" name="confimcode" type="text" id="mailcode" required placeholder="Nhập mã của bạn">
                                     </div>
 
                                     <div class="text-center d-grid mb-2">
-                                        <button class="btn btn-primary" type="submit"> Đặt lại mật khẩu </button>
+                                        <button class="btn btn-primary" type="submit"> Xác nhận code </button>
                                     </div>
                                     <div class="text-center d-grid mb-3">
-                                        <button class="btn btn-outline-secondary" type="submit"> Gửi lại mã </button>
+                                        <a href="resend_code" class="btn btn-outline-secondary" onclick="loadresendemail(this)"><span id="loadmail" style="display: none;" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Gửi lại mã </a>
                                     </div>
 
                                 </form>
@@ -58,3 +81,13 @@
             <!-- end container -->
         </div>
         <!-- end page -->
+
+        <script>
+            function loadresendemail(e){
+                var loadmail = document.getElementById('loadmail');
+                loadmail.style.display = 'inline-block';
+                setTimeout(function() {
+                    loadmail.style.display = 'none';
+                }, 30000);
+            }
+         </script>

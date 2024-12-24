@@ -24,20 +24,50 @@
                                     <p class="text-muted mb-4 mt-3">Bạn chưa có tài khoản? Hãy tạo tài khoản của bạn, chỉ mất chưa đầy một phút</p>
                                 </div>
 
-                                <form action="#">
+                                <form action="<?=ROOT_URL?>__register" method="post">
+                                    <?php
 
+                                        if(isset($_SESSION['notification']['auth'])){
+                                            if($_SESSION['notification']['auth'] == 1){
+                                                echo '
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <i class="mdi mdi-block-helper me-2"></i> Gửi email thất bại!
+                                                    </div>
+                                                    ';
+                                                unset($_SESSION['notification']['auth']);
+                                            }elseif($_SESSION['notification']['auth'] == 2){
+                                                echo '
+                                                <div class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    <i class="mdi mdi-block-helper me-2"></i> Đăng ký thất bại!
+                                                </div>
+                                                ';
+                                                unset($_SESSION['notification']['auth']);
+                                            }
+                                            else{
+                                                echo '
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <i class="mdi mdi-block-helper me-2"></i> Tài khoản đã tồn tại, vui lòng đăng nhập hoặc bạn có thể chọn quên mật khẩu!
+                                                    </div>
+                                                    ';
+                                                unset($_SESSION['notification']['auth']);
+                                            }
+                                        };
+                                    ?>
                                     <div class="mb-3">
                                         <label for="fullname" class="form-label">Họ và tên đầy đủ</label>
-                                        <input class="form-control" type="text" id="fullname" placeholder="Nhập tên của bạn" required>
+                                        <input class="form-control" name="name" type="text" id="fullname" placeholder="Nhập tên của bạn" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="emailaddress" class="form-label">Địa chỉ email</label>
-                                        <input class="form-control" type="email" id="emailaddress" required placeholder="Nhập email của bạn">
+                                        <input class="form-control" name="mail" type="email" id="emailaddress" required placeholder="Nhập email của bạn">
                                     </div>
                                     <div class="mb-3">
                                         <label for="password" class="form-label">Mật khẩu</label>
                                         <div class="input-group input-group-merge">
-                                            <input type="password" id="password" class="form-control" placeholder="Nhập mật khẩu của bạn">
+                                            <input type="password" name="pass" id="password" class="form-control" placeholder="Nhập mật khẩu của bạn">
                                             <div class="input-group-text" data-password="false">
                                                 <span class="password-eye"></span>
                                             </div>
@@ -46,7 +76,7 @@
                                     <div class="mb-3">
                                         <label for="confirm_password" class="form-label">Xác nhận mật khẩu</label>
                                         <div class="input-group input-group-merge">
-                                            <input type="password" id="confirm_password" class="form-control" placeholder="Nhập mật khẩu của bạn">
+                                            <input type="password" name="passagain" id="confirm_password" class="form-control" placeholder="Nhập mật khẩu của bạn">
                                             <div class="input-group-text" data-password="false">
                                                 <span class="password-eye"></span>
                                             </div>
@@ -59,9 +89,8 @@
                                         </div>
                                     </div> -->
                                     <div class="text-center d-grid">
-                                        <button class="btn btn-success" type="submit"> Đăng Ký </button>
+                                        <button class="btn btn-success" type="submit" onclick="loademail(this)"><span id="loadmail" style="display: none;" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đăng Ký </button>
                                     </div>
-
                                 </form>
 
                                 <div class="text-center">
@@ -91,3 +120,12 @@
             <!-- end container -->
         </div>
         <!-- end page -->
+         <script>
+            function loademail(e){
+                var loadmail = document.getElementById('loadmail');
+                loadmail.style.display = 'inline-block';
+                setTimeout(function() {
+                    loadmail.style.display = 'none';
+                }, 2000);
+            }
+         </script>

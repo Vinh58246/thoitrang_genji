@@ -2,9 +2,10 @@
 // cấu hình email
 const host_email = "smtp.gmail.com";
 const port_eamil = 465;
-const name_email = "Super Wow";
+const name_email = "Shop GENJI";
 const address_email = "nguyenphuocvinh051204@gmail.com";
 const pass_email = "jfhlxforuadrwwkx";
+const subject_email = "Announcement from GENJI store";
 
 // cấu hình database
 const DB_HOST = "localhost" ;
@@ -29,3 +30,4 @@ const redirectUri = 'https://web1.orggenji.click/?mod=page&act=dangnhap';
 const ROOT_URL = "/";
 const BASE_DIR= __DIR__;
 const PUBLIC_URL = ROOT_URL."public/";
+const SET_TIME_ZONE = 'Asia/Ho_Chi_Minh';

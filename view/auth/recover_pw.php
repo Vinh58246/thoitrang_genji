@@ -24,15 +24,15 @@
                                     <p class="text-muted mb-4 mt-3">Nhập địa chỉ email của bạn và chúng tôi sẽ gửi cho bạn một email có mã để đặt lại mật khẩu.</p>
                                 </div>
 
-                                <form action="#">
+                                <form action="<?=ROOT_URL?>__recover_pw" method="post">
 
                                     <div class="mb-3">
                                         <label for="emailaddress" class="form-label">Địa chỉ email</label>
-                                        <input class="form-control" type="email" id="emailaddress" required="" placeholder="Nhập email của bạn">
+                                        <input class="form-control" name="mail" type="email" id="emailaddress" required placeholder="Nhập email của bạn">
                                     </div>
 
                                     <div class="text-center d-grid">
-                                        <button class="btn btn-primary" type="submit"> Xác nhận email </button>
+                                        <button class="btn btn-primary" type="submit" onclick="loadchangemail(this)"><span id="loadmail" style="display: none;" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Xác nhận email </button>
                                     </div>
                                 </form>
 
@@ -54,3 +54,13 @@
             <!-- end container -->
         </div>
         <!-- end page -->
+
+        <script>
+            function loadchangemail(e){
+                var loadmail = document.getElementById('loadmail');
+                loadmail.style.display = 'inline-block';
+                setTimeout(function() {
+                    loadmail.style.display = 'none';
+                }, 30000);
+            }
+         </script>

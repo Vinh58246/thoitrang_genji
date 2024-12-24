@@ -42,7 +42,7 @@ class news extends connectDB {
     function delete_news($id){
         $sql = "DELETE FROM news WHERE id=:id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":id", $id, PDO:: PARAM_STR);
+        $stmt->bindParam(":id", $id, PDO:: PARAM_INT);
         $stmt->execute();
         if($stmt->rowCount() > 0){
             return true;

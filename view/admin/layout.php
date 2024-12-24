@@ -35,9 +35,9 @@
                     <ul class="list-unstyled topnav-menu float-end mb-0">
                         <li class="dropdown notification-list topbar-dropdown">
                             <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                <img src="public/assets/images/users/user-1.jpg" alt="user-image" class="rounded-circle">
+                                <img src="public/assets/images/users/<?=$_SESSION['user']['avatar']?>" style="object-fit: cover;" alt="user-image" class="rounded-circle">
                                 <span class="pro-user-name ms-1">
-                                    Geneva <i class="mdi mdi-chevron-down"></i> 
+                                <?=$_SESSION['user']['fullname']?> <i class="mdi mdi-chevron-down"></i> 
                                 </span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
@@ -59,7 +59,7 @@
                                 </a> -->
     
                                 <!-- item-->
-                                <a href="<?='lock_screen'?>" class="dropdown-item notify-item">
+                                <a href="lock_screen" class="dropdown-item notify-item">
                                     <i class="fe-lock"></i>
                                     <span>Đổi mật khẩu</span>
                                 </a>
@@ -67,7 +67,7 @@
                                 <div class="dropdown-divider"></div>
     
                                 <!-- item-->
-                                <a href="login" class="dropdown-item notify-item">
+                                <a href="logout" class="dropdown-item notify-item">
                                     <i class="fe-log-out"></i>
                                     <span>Đăng xuất</span>
                                 </a>

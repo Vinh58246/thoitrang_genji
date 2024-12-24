@@ -25,17 +25,37 @@
                                     <p class="text-muted mb-4 mt-3">Nhập địa chỉ email và mật khẩu của bạn để tiếp tục truy cập.</p>
                                 </div>
 
-                                <form action="#">
-
+                                <form action="<?=ROOT_URL?>__login" method="post">
+                                    <?php
+                                        if(isset($_SESSION['notification']['auth'])){
+                                            if($_SESSION['notification']['auth'] == 1){
+                                                echo '
+                                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <i class="mdi mdi-check-all me-2"></i> Chúc mừng bạn đã là thành viên mới của chúng tôi!
+                                                    </div>
+                                                    ';
+                                                unset($_SESSION['notification']['auth']);
+                                            }else{
+                                                echo '
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <i class="mdi mdi-block-helper me-2"></i> Đăng nhập thất bại!
+                                                    </div>
+                                                    ';    
+                                                unset($_SESSION['notification']['auth']);
+                                            }
+                                        };
+                                    ?>
                                     <div class="mb-3">
                                         <label for="emailaddress" class="form-label">Địa chỉ email</label>
-                                        <input class="form-control" type="email" id="emailaddress" required="" placeholder="Nhập email của bạn">
+                                        <input class="form-control" name="mail" type="email" id="emailaddress" required placeholder="Nhập email của bạn">
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="password" class="form-label">Mật khẩu</label>
                                         <div class="input-group input-group-merge">
-                                            <input type="password" id="password" class="form-control" placeholder="Nhập mật khẩu của bạn">
+                                            <input type="password" name="pass" id="password" class="form-control" required placeholder="Nhập mật khẩu của bạn">
                                             <div class="input-group-text" data-password="false">
                                                 <span class="password-eye"></span>
                                             </div>

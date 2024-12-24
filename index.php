@@ -4,6 +4,7 @@ session_start();
 // session_destroy();
 $baseDir="/";
 require_once "config.php";
+require_once "./model/smtpemail.php";
 spl_autoload_register(function($class)
 { 
     require "controllers/".$class.".php";
@@ -48,6 +49,7 @@ $router = [
 
         // người dùng
         'users' => [new UserController, 'index'],
+        'destroy_user' => [new UserController, 'destroy'],
 
 
         
@@ -66,6 +68,13 @@ $router = [
         
         // đổi mật khẩu
         'lock_screen' => [new ALockScreen, 'index'],
+        
+        // gửi lại mã
+        'resend_code' => [new AConfimMail, 'resend_code'],
+
+        // đăng xuất
+        'logout' => [new ALogin, 'logout'],
+
     ],
     'post' => [
         // danh mục
@@ -82,10 +91,24 @@ $router = [
         'add_news' => [new NewsController, 'store'],
         'edit_news' => [new NewsController, 'edit'],
         'destroy_news' => [new NewsController, 'destroy_list'],
+
+        // customer
+        'destroy_user' => [new UserController, 'destroy_list'],
         
         
         'edit_profile' => [new ProfileController, 'edit'],
         
+        
+        '__register' => [new ARegister, 'store'],
+        
+        '__confim_mail' => [new AConfimMail, 'store'],
+        
+        '__login' => [new ALogin, 'show'],
+
+        '__recover_pw' => [new ARecoverPw, 'store'],
+        
+        '__changepw' => [new ALockScreen, 'edit'],
+
     ]
 ];
 

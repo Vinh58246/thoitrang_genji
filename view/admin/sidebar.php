@@ -5,11 +5,11 @@
 
     <!-- User box -->
     <div class="user-box text-center">
-        <img src="public/assets/images/users/user-1.jpg" alt="user-img" title="Mat Helme"
+        <img src="public/assets/images/users/<?=$_SESSION['user']['avatar']?>" style="object-fit: cover;" alt="user-img" title="Mat Helme"
             class="rounded-circle avatar-md">
         <div class="dropdown">
             <a href="javascript: void(0);" class="text-dark dropdown-toggle h5 mt-2 mb-1 d-block"
-                data-bs-toggle="dropdown">Geneva Kennedy</a>
+                data-bs-toggle="dropdown"><?=$_SESSION['user']['fullname']?></a>
             <div class="dropdown-menu user-pro-dropdown">
 
                 <!-- item-->
@@ -25,7 +25,7 @@
                 </a>
 
                 <!-- item-->
-                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                <a href="logout" class="dropdown-item notify-item">
                     <i class="fe-log-out me-1"></i>
                     <span>Đăng xuất</span>
                 </a>

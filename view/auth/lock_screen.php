@@ -25,17 +25,18 @@
                                 </div>
 
                                 <div class="text-center w-75 m-auto">
-                                    <img src="public/assets/images/users/user_default2.png" height="88" alt="user-image" class="rounded-circle shadow">
-                                    <h4 class="text-dark-50 text-center mt-3">Hi ! Geneva </h4>
+                                    
+                                    <img src="public/assets/images/users/<?=$detail['avatar']?>" height="88" alt="user-image" class="rounded-circle shadow">
+                                    <h4 class="text-dark-50 text-center mt-3">Hi ! <?=$detail['fullname']?> </h4>
                                     <p class="text-muted mb-4">Nhập mật khẩu của bạn để tiếp tục truy cập.</p>
                                 </div>
 
 
-                                <form action="#">
+                                <form action="<?=ROOT_URL?>__changepw" method="post">
 
                                     <div class="mb-3">
                                         <label for="password" class="form-label">Mật khẩu</label>
-                                        <input class="form-control" type="password" required="" id="password" placeholder="Nhập mật khẩu của bạn">
+                                        <input class="form-control" name="pass" type="password" required id="password" placeholder="Nhập mật khẩu mới của bạn">
                                     </div>
 
                                     <div class="text-center d-grid">
