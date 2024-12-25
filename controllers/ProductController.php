@@ -100,14 +100,15 @@ class ProductController{
 
         // xử lý biến thể
         if(isset($idproduct) && !empty($idproduct)){
-
-
             
             // nếu biến quantity_attribute có tồn tại
             if(isset($_POST['quantity_attribute'])){
                 // echo '<pre>';
                 //         var_export($_POST['name_variant']);
                 //     echo '</pre>';
+
+
+                
                 // lấy tên biến thê và lưu
                 for ($i=0; $i < count($_POST['name_variant']); $i++) {
                     $idname = $this->modelvariant->save_variant_name($idproduct, $_POST['name_variant'][$i]);
@@ -117,50 +118,66 @@ class ProductController{
                }
 
 
+// echo '<pre>';
+//                         var_export($arrayname);
+//                     echo '</pre>';
+                
 
                 //    đếm có bao nhiêu quantity_attribute có giá trị
                $countvariant = 0;
-
+               $listcogiatri = [];
+               $listrong = [];
                 for ($i=0; $i < count($_POST['quantity_attribute']); $i++) { 
                     
                    if(!empty($_POST['quantity_attribute'][$i])){
+                        $listcogiatri[] = $i;
                         $countvariant++;
+                   }else{
+                        $listrong[] = $i;
                    }
                 }
-                
-                echo '<pre>';
-                        var_export($_POST['quantity_attribute']);
-                    echo '</pre>';
-                echo $countvariant.' có giá trị';
+                // echo 'list rong';
+                // echo '<pre>';
+                //         var_export($listcogiatri);
+                //     echo '</pre>';
+                // echo '<pre>';
+                //         var_export($listrong);
+                //     echo '</pre>';
+                // echo '<pre>';
+                //         var_export($_POST['quantity_attribute']);
+                //     echo '</pre>';
+                // echo $countvariant.' có giá trị';
                 // nếu các trường có giá trị lớn hơn 0
                 if($countvariant > 0){
                     $name_attribute = $_POST['name_attribute'];
                     $value_attribute = $_POST['value_attribute'];
-                    echo '<pre>';
-                        var_export($value_attribute);
-                    echo '</pre>';
+
+                    $arrvalue_attribute = [];
+                    // echo '<pre>';
+                    //     var_export($value_attribute);
+                    // echo '</pre>';
+                    foreach ($listrong as $key => $value) {
+                        for ($i=0; $i < count($arrayname); $i++) { 
+                            unset($value_attribute[$value * 2 + $i]);
+                        }
+                    }
+
+                    // lọc các attribute không có giá trị, thay mảng mới
+                    $newvalue_attriute_saukhixoa = array_values($value_attribute);
+
+                    // echo '<pre>';
+                    //     var_export($newvalue_attriute_saukhixoa);
+                    // echo '</pre>';
                     $tinhsolanlap = $countvariant * count($arrayname);
 
-                    // $arrayvaluenotalike = array_unique($value_attribute);
 
-                    // for ($i=0; $i < $tinhsolanlap; $i++) {
-                    //     for ($j=0; $j < count($arrayvaluenotalike); $j++) { 
-                    //         if($arrayvaluenotalike[$j] == $value_attribute[$i]){
-                    //             $objectab[$arrayvaluenotalike[$j]] = 
-                    //         }
-                    //     }
-                    // }
-                    // echo '<pre>';
-                    //     var_export(array_unique($value_attribute));
-                    // echo '</pre>';
-
-                    echo $tinhsolanlap.' thuộc tính cần lấy</br>';
+                    // echo $tinhsolanlap.' thuộc tính cần lấy</br>';
                     for ($i=0; $i < $tinhsolanlap; $i++) { 
                         foreach ($arrayname as $key => $value) {
-                            echo 'mảng arrayname có key = ( '.$key.' ) và giá trị = ( '.$value.' )</br>';
+                            // echo 'mảng arrayname có key = ( '.$key.' ) và giá trị = ( '.$value.' )</br>';
                             if($name_attribute[$i] == $key){
-                                $objvalue[$value_attribute[$i]] = $value;
-                                echo 'giá trị '.$value_attribute[$i].' có tên biến thể là '.$name_attribute[$i].' thuộc trong key ( '.$key.' ) và có id ( '.$value.' )</br>';
+                                $objvalue[$newvalue_attriute_saukhixoa[$i]] = $value;
+                                // echo 'giá trị '.$newvalue_attriute_saukhixoa[$i].' có tên biến thể là '.$name_attribute[$i].' thuộc trong key ( '.$key.' ) và có id ( '.$value.' )</br>';
                                 // $this->modelvariant->save_variant_attribute($value, $value_attribute[$i]);
                             }
                         }
@@ -179,7 +196,7 @@ class ProductController{
                     for ($i=0; $i < $tinhsolanlap; $i++) { 
                         
                         foreach ($objattri as $key => $value) {
-                            if($value_attribute[$i] == $key){
+                            if($newvalue_attriute_saukhixoa[$i] == $key){
                                 $array_link[$demarray][$flag_name] = $value;
                                 // $array_link[$demarray] += $value;
                             }
@@ -197,35 +214,46 @@ class ProductController{
                     $images_attribute = $_FILES['images_attribute'];
                     $price_attribute = $_POST['price_attribute'];
                     $quantity_attribute = $_POST['quantity_attribute'];
-                    // echo '--------------------------------------</br>';
-                    for ($i=0; $i < count($array_link); $i++) {
-                        $linking = implode('-', $array_link[$i]);
-                        if(isset($images_attribute['name'][$i]) && !empty($images_attribute['name'][$i])){
-                            move_uploaded_file($images_attribute['tmp_name'][$i], "public/assets/images_variant/".$images_attribute['name'][$i]);
-                        }
-                        // echo 'từ mảng thành chuỗi thứ '.$i.' ( '.$linking.' )</br>';
-                        // echo 'hình ảnh thứ '.$i.' ( '.$images_attribute['name'][$i].' )</br>';
-                        // echo 'giá tiền thứ '.$i.' ( '.$price_attribute[$i].' )</br>';
-                        // echo 'số lượng thứ '.$i.' ( '.$quantity_attribute[$i].' )</br>';
-                        // echo '--------------------------------------</br>';
-                        $this->modelvariant->save_linking_variant_attributes($idproduct, $linking, $quantity_attribute[$i], $price_attribute[$i], $images_attribute['name'][$i]);
-                    }
 
-                    
-
-                    // echo "mảng đếm array link";
+                    // echo "hình ảnh";
+                    // echo '<pre>';
+                    //     var_export($images_attribute['name']);
+                    // echo '</pre>';
+                    // echo "giá";
+                    // echo '<pre>';
+                    //     var_export($price_attribute);
+                    // echo '</pre>';
+                    // echo "số lượng";
+                    // echo '<pre>';
+                    //     var_export($quantity_attribute);
+                    // echo '</pre>';
+                    // echo "mảng link";
                     // echo '<pre>';
                     //     var_export($array_link);
                     // echo '</pre>';
+                    // echo '--------------------------------------</br>';
 
+                    foreach ($listcogiatri as $key => $value) {
+                        $linking = implode('-', $array_link[$key]);
+                        if(isset($images_attribute['name'][$value]) && !empty($images_attribute['name'][$value])){
+                            move_uploaded_file($images_attribute['tmp_name'][$i], "public/assets/images_variant/".$images_attribute['name'][$i]);
+                        }
+                        $this->modelvariant->save_linking_variant_attributes($idproduct, $linking, $quantity_attribute[$value], $price_attribute[$value], $images_attribute['name'][$value]);
+                    // echo $key."</br>";
+                    // echo $value."</br>";
+                    // echo "-----------------</br>";
+                    }
 
                 }
             }
-            // else{
-            //     echo 'không có biến thể nào';
-            // }
 
-        }
+
+            // else{
+                //     echo 'không có biến thể nào';
+                // }
+                
+            }
+        // header("location:". ROOT_URL. "detail_product?id=".$idproduct);
         // echo '<pre>';
         //     var_export($objvalue);
         // echo '</pre>';
