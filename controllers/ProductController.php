@@ -19,13 +19,15 @@ class ProductController{
 
     }
     function index(){
+        $this->checkusernot();
+
         global $params;
         if(isset($params['cate'])){
             $slug = $params['cate'];
             $idcategory = $this->modelcate->detail_category_slug($slug);
             $allProducts = $this->modelpro->cate_products($idcategory['id']);
         }else{
-            $allProducts = $this->modelpro->all_products();
+            $allProducts = $this->modelpro->list_all_product();
         }
 
         $allCategories = $this->modelcate->all_categories();
@@ -37,6 +39,8 @@ class ProductController{
         include_once "view/admin/layout.php";
     }
     function create(){
+        $this->checkusernot();
+
         $allCategories = $this->modelcate->all_categories();
 
         $link_css = Linkfile::LINKCSS[3];
@@ -45,6 +49,7 @@ class ProductController{
         include_once "view/admin/layout.php";
     }
     function store(){
+        $this->checkusernot();
 
         $name_file = $_FILES['image']['name'];
         $temp_file = $_FILES['image']['tmp_name'];
@@ -58,7 +63,6 @@ class ProductController{
         $detailed_description = (strlen($_POST['detailed_description']) <= 50) ? null : $_POST['detailed_description'];
         $product_summary = trim(strip_tags($_POST['product_summary']));
         $price = (int) $_POST['price'];
-        $quantity = ($_POST['quantity'] == '') ?  999 : (int) $_POST['quantity'];
         $hot = (int) $_POST['hot'];
         $status = (int) $_POST['status'];
 
@@ -67,7 +71,7 @@ class ProductController{
             $notification = false;
         }
         else{
-            $idproduct = $this->modelpro->save_product($idcategory, $name, $name_file, $detailed_description, $product_summary, $price, $quantity, $hot, $status, $name_slug);
+            $idproduct = $this->modelpro->save_product($idcategory, $name, $name_file, $detailed_description, $product_summary, $price, $hot, $status, $name_slug);
 
             for ($i=0; $i < count($_FILES['list_image']['name']); $i++) { 
                 move_uploaded_file($name_file_son['tmp_name'][$i], "public/assets/images_product/".$name_file_son['name'][$i]);
@@ -96,27 +100,45 @@ class ProductController{
 
         // xử lý biến thể
         if(isset($idproduct) && !empty($idproduct)){
-        
+
+
+            
+            // nếu biến quantity_attribute có tồn tại
             if(isset($_POST['quantity_attribute'])){
+                // echo '<pre>';
+                //         var_export($_POST['name_variant']);
+                //     echo '</pre>';
+                // lấy tên biến thê và lưu
                 for ($i=0; $i < count($_POST['name_variant']); $i++) {
                     $idname = $this->modelvariant->save_variant_name($idproduct, $_POST['name_variant'][$i]);
                     $arrayname[$_POST['name_variant'][$i]] = $idname;
 
                     // $this->modelvariant->save_variant_attribute($idname, );
                }
+
+
+
+                //    đếm có bao nhiêu quantity_attribute có giá trị
                $countvariant = 0;
 
                 for ($i=0; $i < count($_POST['quantity_attribute']); $i++) { 
                     
-                   if($_POST['quantity_attribute'][$i] !== ''){
+                   if(!empty($_POST['quantity_attribute'][$i])){
                         $countvariant++;
                    }
                 }
                 
+                echo '<pre>';
+                        var_export($_POST['quantity_attribute']);
+                    echo '</pre>';
                 echo $countvariant.' có giá trị';
+                // nếu các trường có giá trị lớn hơn 0
                 if($countvariant > 0){
                     $name_attribute = $_POST['name_attribute'];
                     $value_attribute = $_POST['value_attribute'];
+                    echo '<pre>';
+                        var_export($value_attribute);
+                    echo '</pre>';
                     $tinhsolanlap = $countvariant * count($arrayname);
 
                     // $arrayvaluenotalike = array_unique($value_attribute);
@@ -132,13 +154,13 @@ class ProductController{
                     //     var_export(array_unique($value_attribute));
                     // echo '</pre>';
 
-                    // echo $tinhsolanlap.' thuộc tính cần lấy</br>';
+                    echo $tinhsolanlap.' thuộc tính cần lấy</br>';
                     for ($i=0; $i < $tinhsolanlap; $i++) { 
                         foreach ($arrayname as $key => $value) {
-                            // echo 'mảng arrayname có key = '.$key.' và giá trị = '.$value.'</br>';
+                            echo 'mảng arrayname có key = ( '.$key.' ) và giá trị = ( '.$value.' )</br>';
                             if($name_attribute[$i] == $key){
                                 $objvalue[$value_attribute[$i]] = $value;
-                                // echo 'giá trị '.$value_attribute[$i].' có tên biến thể là '.$name_attribute[$i].' thuộc trong key ( '.$key.' ) và có id ( '.$value.' )</br>';
+                                echo 'giá trị '.$value_attribute[$i].' có tên biến thể là '.$name_attribute[$i].' thuộc trong key ( '.$key.' ) và có id ( '.$value.' )</br>';
                                 // $this->modelvariant->save_variant_attribute($value, $value_attribute[$i]);
                             }
                         }
@@ -229,6 +251,8 @@ class ProductController{
     }
 
     function show(){
+        $this->checkusernot();
+
         global $params;
         $id = $params['id'];
         $allCategories = $this->modelcate->all_categories();
@@ -239,10 +263,14 @@ class ProductController{
         if(isset($show_variant_name) && !empty($show_variant_name)){
             $show_linking_variant_attributes = $this->modelvariant->show_linking_variant_attributes($id);
 
-
+            //  echo "<pre>";
+            // var_export($show_variant_name);
+            // echo "</pre>";
+            $namevarriant = [];
             $arrvalue = [];
             $flag_lapvalue = 0;
             foreach ($show_variant_name as $i) {
+                $namevarriant[] = $i['name'];
                 $show_variant_attribute = $this->modelvariant->show_variant_attribute($i['id']);
                 foreach ($show_variant_attribute as $j) {
 
@@ -255,6 +283,10 @@ class ProductController{
                 }
             }
 
+
+            //  echo "<pre>";
+            // var_export($namevarriant);
+            // echo "</pre>";
             $arrlinking = [];
             $flag_linking = 0;
             foreach ($show_linking_variant_attributes as $i) {
@@ -265,7 +297,6 @@ class ProductController{
                 // echo 'idproduct '.$i['idproduct'].'</br>';
                 // echo 'linking '.$i['linking'].'</br>';
                 // echo 'price '.$i['price'].'</br>';
-                // echo 'quantity '.$i['quantity'].'</br>';
                 // echo 'image '.$i['image'].'</br>';
                 // echo '-------------------------</br>';
                 $flag_linking++;
@@ -295,8 +326,11 @@ class ProductController{
 
             // hiển thị show_variant_attribute
             // echo "<pre>";
-            // var_export($arrvalue);
+            // var_export($show_variant_name);
             // echo "</pre>";
+            // foreach ($show_variant_name as $i) {
+            //     echo $i['name'];
+            // }
 
             // hiển thị linking_variant_attributes
             // echo "<pre>";
@@ -324,7 +358,13 @@ class ProductController{
         $view_content = "view/admin/edit_product.php";
         include_once "view/admin/layout.php";
     }
+
+
+
+
+
     function edit(){
+        $this->checkusernot();
 
         $id = $_POST['id'];
         $allCategories = $this->modelcate->all_categories();
@@ -345,7 +385,6 @@ class ProductController{
         $detailed_description = (strlen($_POST['detailed_description']) <= 50) ? null : $_POST['detailed_description'];
         $product_summary = trim(strip_tags($_POST['product_summary']));
         $price = (int) $_POST['price'];
-        $quantity = ($_POST['quantity'] == '') ?  999 : (int) $_POST['quantity'];
         $hot = (int) $_POST['hot'];
         $status = (int) $_POST['status'];
 
@@ -356,7 +395,7 @@ class ProductController{
         }
         elseif($name_file == ''){
             $name_file = $detail['image'];
-            $this->modelpro->update_product($id, $idcategory,$name,$name_file,$detailed_description,$product_summary,$price,$quantity,$hot,$status,$name_slug);
+            $this->modelpro->update_product($id, $idcategory,$name,$name_file,$detailed_description,$product_summary,$price,$hot,$status,$name_slug);
             $notification = true;
 
             if(!empty($name_file_valit_son)){
@@ -383,7 +422,7 @@ class ProductController{
     
         }
         else{
-            $idproduct = $this->modelpro->update_product($id, $idcategory,$name,$name_file,$detailed_description,$product_summary,$price,$quantity,$hot,$status,$name_slug);
+            $idproduct = $this->modelpro->update_product($id, $idcategory,$name,$name_file,$detailed_description,$product_summary,$price,$hot,$status,$name_slug);
             move_uploaded_file($temp_file, "public/assets/images_product/$name_file");
 
             if(!empty($name_file_valit_son)){
@@ -487,10 +526,11 @@ class ProductController{
         }
 
        
-        $link_css = Linkfile::LINKCSS[3];
-        $link_js = Linkfile::LINKJS[4]; 
-        $view_content = "view/admin/edit_product.php";
-        include_once "view/admin/layout.php";
+        // $link_css = Linkfile::LINKCSS[3];
+        // $link_js = Linkfile::LINKJS[4]; 
+        // $view_content = "view/admin/edit_product.php";
+        // include_once "view/admin/layout.php";
+        header("location:". ROOT_URL. "detail_product?id=".$id);
 
 
         // xử lý biến thể
@@ -607,6 +647,8 @@ class ProductController{
 
     }
     function destroy(){
+        $this->checkusernot();
+
         try{
             global $params;
             $id = $params['id'];
@@ -631,6 +673,8 @@ class ProductController{
         header("location:". ROOT_URL. "products");
     }
     function destroy_list(){
+        $this->checkusernot();
+
         try{
             // kiểm tra check list có tồn tại không
             if(isset($_POST['check_list'])){
@@ -699,6 +743,12 @@ class ProductController{
         $string = preg_replace('/\s+/', '-', $string);
         $string = strtolower($string);
         return $string;
+    }
+
+    function checkusernot(){
+        if(!isset($_SESSION['user']) || empty($_SESSION['user']) || empty($_SESSION['user']['email_verified_at'])){
+            header("location:". ROOT_URL. "login");
+        }
     }
 }
 ?>

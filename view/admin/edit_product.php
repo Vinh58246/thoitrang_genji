@@ -82,12 +82,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label for="product-price">Giá <span class="text-danger">*</span></label>
-                                                <input type="number" value="<?=$detail['price']?>" name="price" class="form-control" id="product-price" placeholder="vd: 1000000 => 1 triệu">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label for="product-price">Số lượng</label>
-                                                <input type="number" value="<?=$detail['quantity']?>" name="quantity" class="form-control" id="product-price" placeholder="Nhập số lượng sản phẩm">
+                                                <input type="number" value="<?=$detail['price']?>" name="price" class="form-control" id="product-price" placeholder="vd: 1000000 => 1 triệu" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength = "10">
                                             </div>
 
                                             <div class="mb-3">
@@ -199,10 +194,12 @@
 
                                                     $string_variant .= $arrlinking[$i][0].'#-#'.$arrlinking[$i][1].'#-#'.$arrlinking[$i][2].'#-#'.$arrlinking[$i][3].'#-#'.$arrlinking[$i][4].'#-#'.$arrlinking[$i][5].'$-$';
                                                 }
+                                                $stringnamevariant = implode('-', $namevarriant);
                                                 // echo "<pre>";
                                                 // var_export($arrlinking);
                                                 // echo "</pre>";
                                                 echo '<input type="hidden" value="'.$string_variant.'" id="stringlistvariant" />';
+                                                echo '<input type="hidden" value="'.$stringnamevariant.'" id="stringnamevariant" />';
                                             }
                                            
                                             // foreach ($list_image as $i) {
@@ -279,145 +276,158 @@
 
                     let stringlistimage = document.getElementById('stringlistimage');
                     let stringlistvariant = document.getElementById('stringlistvariant');
+                    let stringnamevariant = document.getElementById('stringnamevariant');
                     // console.log(stringlistvariant);
-                    var listimage = handlestringlistimage(stringlistimage.value);
+                    // console.log(stringlistimage.value);
 
+                    // console.log(listimage);
+                    var listnamevariant = handlearrnamevariant(stringnamevariant.value);
 
-
+                    // xử lý tên của biến thể
+                    function handlearrnamevariant(str){
+                        let arrname = str.split('-');
+                        return arrname;
+                    }
                     
+                    // xử lý input của hình ảnh
                     function handlestringlistimage(strlist){
+
                         let arrlist = strlist.split('@-@');
                         var arr2list = [];
                         arrlist.pop();
                         for (let i = 0; i < arrlist.length; i++) {
                             arr2list[i] = arrlist[i].split('#-#');
                         }
+                    // console.log(arr2list);
+
                         return arr2list;
                     }
                     
-                    // console.log(listimage);
-                    docarrfile(listimage);
+                    
+                    var listimage = handlestringlistimage(stringlistimage.value);
 
+                    docarrfile(listimage)
+
+                    // hiện thị list danh sách danh mục con
                     function docarrfile(liimage){
                         for (let i = 0; i < liimage.length; i++) {
 
-                            let fileSizeInMB = '';
-                            let type = '';
-                            // nếu file có kích thước lớn tính bằng MB ngược lại Là KB
-                            if(liimage[i][2] >= 1000000){
-                                fileSizeInMB = (liimage[i][2] / (1024 * 1024)).toFixed(2);
-                                type = 'MB';
-                                
-                            }else{
-                                fileSizeInMB = (liimage[i][2] / 1024).toFixed(2);
-                                type = 'KB';
-                            }
+                        let fileSizeInMB = '';
+                        let type = '';
+                        // nếu file có kích thước lớn tính bằng MB ngược lại Là KB
+                        if(liimage[i][2] >= 1000000){
+                            fileSizeInMB = (liimage[i][2] / (1024 * 1024)).toFixed(2);
+                            type = 'MB';
                             
-                            document.getElementById('preview-files').innerHTML += 
-                                `<div class='dem' id='khungxoa${liimage[i][3]}'>
-                                <div class='frame-previews my-2'>
-                                <img src='public/assets/images_product/${liimage[i][1]}' class='img-preview'/>
-                                        <div class='parameter-preview'>
-                                            <p class='m-0'>${liimage[i][1]}</p>
-                                            <p class='m-0'><strong>${fileSizeInMB}</strong> ${type}</p>
-                                        </div>
-                                    </div>
-                                    </div>`;
-                                }
+                        }else{
+                            fileSizeInMB = (liimage[i][2] / 1024).toFixed(2);
+                            type = 'KB';
+                        }
                         
+                        document.getElementById('preview-files').innerHTML += 
+                            `<div class='dem' id='khungxoa${liimage[i][3]}'>
+                            <div class='frame-previews my-2'>
+                            <img src='public/assets/images_product/${liimage[i][1]}' class='img-preview'/>
+                                    <div class='parameter-preview'>
+                                        <p class='m-0'>${liimage[i][1]}</p>
+                                        <p class='m-0'><strong>${fileSizeInMB}</strong> ${type}</p>
+                                    </div>
+                                </div>
+                                </div>`;
                             }
+                        
+                    }
                             
-                            function handlestringlistvariant(strvariant){
-                                let arrlistv1 = strvariant.split('$-$');
-                                let arrlistv2 = [];
-                                // console.log(arrlistv1);
-                                for (let i = 0; i < arrlistv1.length; i++) {
-                                    arrlistv2[i] = arrlistv1[i].split('#-#');
-                                }
-        
-                                return arrlistv2;
-                            }
+                    function handlestringlistvariant(strvariant){
+                        let arrlistv1 = strvariant.split('$-$');
+                        let arrlistv2 = [];
+                        // console.log(arrlistv1);
+                        for (let i = 0; i < arrlistv1.length; i++) {
+                            arrlistv2[i] = arrlistv1[i].split('#-#');
+                        }
 
-                            var datavariant = handlestringlistvariant(stringlistvariant.value);
+                        return arrlistv2;
+                    }
 
-                            showvariantcosan(datavariant);
+                    var datavariant = handlestringlistvariant(stringlistvariant.value);
 
-                            function showvariantcosan(datavariant){
-                                var showframeattributesvariant = document.getElementById('showframeattributesvariant');
-                                console.log(datavariant);
+                    showvariantcosan(datavariant);
 
-                                showframeattributesvariant.innerHTML = 
-                                    `<div class="card">
-                                        <div class="card-body p-3">
-                                            <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Các thuộc tính của biến thể</h5>
+                    function showvariantcosan(datavariant){
+                        var showframeattributesvariant = document.getElementById('showframeattributesvariant');
+                        // console.log(datavariant);
 
-                                            <div id="showframeinputattributesvariant">
-                                                
-                                                
-                                            </div>
-                                        </div>
-                                    </div>`;
-                                
-                                for (let i = 0; i < datavariant.length; i++) {
-                                    rendercacvariantcosan(datavariant[i])
-                                    
-                                }
-                                
+                        showframeattributesvariant.innerHTML = 
+                            `<div class="card">
+                                <div class="card-body p-3">
+                                    <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Các thuộc tính của biến thể</h5>
 
-                                
-                                
-                                
-                            }
+                                    <div id="showframeinputattributesvariant">
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>`;
+                        
+                        for (let i = 0; i < datavariant.length; i++) {
+                            rendercacvariantcosan(datavariant[i])
+                            
+                        }
+                        
+                    }
+                        
 
-                            function rendercacvariantcosan(datacosan){
-                                // console.log(datacosan);
-                                var demkhung = datacosan[2].split('!-!');
-                                var sthtmlvariant = '';
-                                var valuevaricosan = [];
-                                var anh = (datacosan[5] != '') ? datacosan[5] : 'bkwhite.jpg';
-                                for (let i = 0; i < demkhung.length; i++) {
-                                    valuevaricosan = demkhung[i].split('%-%');
-                                    sthtmlvariant += 
-                                    `<div class="mx-2">
-                                        <label for="">giá trị ${i}</label>
-                                        <input type="text" value="${valuevaricosan[1]}" name="value_attribute[]" class="form-control mt-2" readonly>
-                                    </div>`;
-                                    
-                                }
-                                
+                    function rendercacvariantcosan(datacosan){
+                        // console.log(datacosan + 'xin chà');
+                        var demkhung = datacosan[2].split('!-!');
+                        var sthtmlvariant = '';
+                        var valuevaricosan = [];
+                        var anh = (datacosan[5] != '') ? datacosan[5] : 'bkwhite.jpg';
+                        for (let i = 0; i < demkhung.length; i++) {
+                            valuevaricosan = demkhung[i].split('%-%');
+                            sthtmlvariant += 
+                            `<div class="mx-2">
+                                <label for="">${listnamevariant[i]}</label>
+                                <input type="text" value="${valuevaricosan[1]}" name="value_attribute[]" class="form-control mt-2" readonly>
+                            </div>`;
 
-                                document.getElementById('showframeinputattributesvariant').innerHTML +=
-                                    `<div class="mb-3 d-flex justify-content-between">
-                                        <div class="mx-2">
-                                            <label for="">hình ảnh</label>
-                                            <div>
-                                                <img style="width: 50px; height: 50px; border: 2px dashed #d4d4d4; border-radius: 5px;" src="public/assets/images_variant/${anh}"/>
-                                            </div>
-                                        </div>
-                                        ${sthtmlvariant}
-                                        <div class="mx-2">
-                                            <label for="">giá tiền ( VNĐ )</label>
-                                            <input type="text" value="${datacosan[3]}" name="price_attribute[]" class="form-control mt-2">
-                                        </div>
-                                        <div class="mx-2">
-                                            <label for="">số lượng <span class="text-danger">*</span></label>
-                                            <input type="text" value="${datacosan[4]}" name="quantity_attribute[]" class="form-control mt-2">
-                                            <input type="hidden" value="${datacosan[0]}" name="id_linking_variant[]"/>
-                                        </div>
-                                    </div>`;
+                            // console.log(sthtmlvariant);
+                            
+                        }
+                        
 
-                                // Thêm script dropify.min.js vào cuối body
-                                let script = document.createElement("script");
-                                script.src = "public/assets/libs/dropify/js/dropify.min.js";
-                                script.onload = function() {
-                                    console.log("Dropify script loaded!");
-                                    // Nếu dropify cần khởi tạo
-                                    $('[data-plugins="dropify"]').dropify();
-                                };
-                                document.body.appendChild(script);
-                            }
-                            // alert(stringlistimage.value);
-                        });
+                        document.getElementById('showframeinputattributesvariant').innerHTML +=
+                            `<div class="mb-3 d-flex justify-content-between">
+                                <div class="mx-2">
+                                    <label for="">hình ảnh</label>
+                                    <div>
+                                        <img style="width: 50px; height: 50px; border: 2px dashed #d4d4d4; border-radius: 5px;" src="public/assets/images_variant/${anh}"/>
+                                    </div>
+                                </div>
+                                ${sthtmlvariant}
+                                <div class="mx-2">
+                                    <label for="">giá tiền ( VNĐ )</label>
+                                    <input type="number" value="${datacosan[3]}" name="price_attribute[]" class="form-control mt-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength = "10">
+                                </div>
+                                <div class="mx-2">
+                                    <label for="">số lượng <span class="text-danger">*</span></label>
+                                    <input type="number" value="${datacosan[4]}" name="quantity_attribute[]" class="form-control mt-2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength = "10">
+                                    <input type="hidden" value="${datacosan[0]}" name="id_linking_variant[]"/>
+                                </div>
+                            </div>`;
+
+                        // Thêm script dropify.min.js vào cuối body
+                        let script = document.createElement("script");
+                        script.src = "public/assets/libs/dropify/js/dropify.min.js";
+                        script.onload = function() {
+                            console.log("Dropify script loaded!");
+                            // Nếu dropify cần khởi tạo
+                            $('[data-plugins="dropify"]').dropify();
+                        };
+                        document.body.appendChild(script);
+                    }
+                    // alert(stringlistimage.value);
+                });
                         // let framewriting = document.getElementsByClassName("ql-editor");
                 // let getall = document.getElementById("getall");
                 // let content = document.getElementById("conten");

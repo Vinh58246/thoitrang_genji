@@ -1,7 +1,7 @@
 <?php
 require_once "connectDB.php";
 class user extends connectDB {
-    function save_user($fullname, $email, $password, $role, $avatar = 'user_default2.png', $remember_token = null, $address = null, $phone = null){
+    function save_user($fullname, $email, $password, $role, $avatar = 'user_default.jpg', $remember_token = null, $address = null, $phone = null){
         $sql = "INSERT INTO users SET fullname=:fullname,  email=:email, password=:password, avatar=:avatar, remember_token=:remember_token, address=:address, phone=:phone, role=:role";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(":fullname", $fullname, PDO::PARAM_STR);

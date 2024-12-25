@@ -25,8 +25,7 @@
                                 </div>
 
                                 <div class="text-center w-75 m-auto">
-                                    
-                                    <img src="public/assets/images/users/<?=$detail['avatar']?>" height="88" alt="user-image" class="rounded-circle shadow">
+                                    <img src="public/assets/image_user/<?=$detail['avatar']?>" height="88" alt="user-image" class="rounded-circle shadow">
                                     <h4 class="text-dark-50 text-center mt-3">Hi ! <?=$detail['fullname']?> </h4>
                                     <p class="text-muted mb-4">Nhập mật khẩu của bạn để tiếp tục truy cập.</p>
                                 </div>

@@ -8,6 +8,8 @@ class UserController{
 
     }
     function index(){
+        $this->checkusernot();
+
         $all_users = $this->model->all_users();
 
         $datatable_js = '<script src="public/assets/js/pages/list_users.init.js"></script>';
@@ -17,6 +19,8 @@ class UserController{
         include_once "view/admin/layout.php";
     }
     function destroy(){
+        $this->checkusernot();
+
         try{
             global $params;
             $id = $params['id'];
@@ -25,8 +29,10 @@ class UserController{
 
             if($notification == true){
                 $_SESSION['notification']['destroy_list'] = 1;
-                $link_image = "public/assets/images/users/".$detail['avatar'];
-                unlink($link_image);
+                if($detail['avatar'] != 'user_default.jpg'){
+                    $link_image = "public/assets/image_user/".$detail['avatar'];
+                    unlink($link_image);
+                }
             }
             else{
                 $_SESSION['notification']['destroy_list'] = 0;
@@ -42,6 +48,8 @@ class UserController{
     }
 
     function destroy_list(){
+        $this->checkusernot();
+
         try{
             // kiểm tra check list có tồn tại không
             if(isset($_POST['check_list'])){
@@ -53,8 +61,10 @@ class UserController{
 
                     if($notification == true){
                         $_SESSION['notification']['destroy_list'] = 1;
-                        $link_image = "public/assets/images/users/".$detail['avatar'];
-                        unlink($link_image);
+                        if($detail['avatar'] != 'user_default.jpg'){
+                            $link_image = "public/assets/image_user/".$detail['avatar'];
+                            unlink($link_image);
+                        }
                     }
                     else{
                         $_SESSION['notification']['destroy_list'] = 0;
@@ -71,6 +81,11 @@ class UserController{
             }
         }
         header("location:". ROOT_URL. "users");
+    }
+    function checkusernot(){
+        if(!isset($_SESSION['user']) || empty($_SESSION['user']) || empty($_SESSION['user']['email_verified_at'])){
+            header("location:". ROOT_URL. "login");
+        }
     }
 }
 ?>

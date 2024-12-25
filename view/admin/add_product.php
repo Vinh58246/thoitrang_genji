@@ -75,12 +75,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label for="product-price">Giá <span class="text-danger">*</span></label>
-                                                <input type="number" name="price" class="form-control" id="product-price" placeholder="vd: 1000000 => 1 triệu">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label for="product-price">Số lượng</label>
-                                                <input type="number" name="quantity" class="form-control" id="product-price" placeholder="Nhập số lượng sản phẩm">
+                                                <input type="number" name="price" class="form-control" id="product-price" placeholder="vd: 1000000 => 1 triệu" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength = "10">
                                             </div>
 
                                             <div class="mb-3">
@@ -156,7 +151,7 @@
                                             <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Ảnh đại diện</h5>
                                             <div class="drop-zone">
                                                 <div class="drop-zone__prompt d-flex flex-column"><i class="h1 text-muted dripicons-cloud-upload"></i><span>Thả ảnh vào đây hoặc nhấp để chọn ảnh</span></div>
-                                                <input type="file" name="image" class="drop-zone__input" accept="image/gif, image/jpeg, image/png">
+                                                <input type="file" name="image" class="drop-zone__input" accept="image/*">
                                             </div>
                                         </div>
                                     </div> <!-- end col-->
@@ -168,7 +163,7 @@
 
                                             <label class="custom-file-upload">
                                                 <input style="display: none;" type="file" name="list_image[]" onchange="docfile()" id="upload" multiple
-                                                            accept="image/gif, image/jpeg, image/png">
+                                                            accept="image/*">
                                                 <div class="d-flex flex-column align-items-center">
                                                     <i class="h1 text-muted dripicons-cloud-upload"></i>
                                                     <h4 class="text-muted">Nhấp để chọn các ảnh con</h4>
@@ -474,11 +469,11 @@
                                 ${columinputvariant(result[i])}
                                 <div class="mx-2">
                                     <label for="">giá tiền ( VNĐ )</label>
-                                    <input type="text" name="price_attribute[]" class="form-control mt-2" placeholder="Nhập giá tiền">
+                                    <input type="number" name="price_attribute[]" class="form-control mt-2" placeholder="Nhập giá tiền" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength = "10">
                                 </div>
                                 <div class="mx-2">
                                     <label for="">số lượng <span class="text-danger">*</span></label>
-                                    <input type="text" name="quantity_attribute[]" class="form-control mt-2" placeholder="Nhập số lượng">
+                                    <input type="number" name="quantity_attribute[]" class="form-control mt-2" placeholder="Nhập số lượng" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength = "10">
                                 </div>
                                 <div class="d-flex align-items-center demattribute">
                                     <div style="padding: 1px 6px;" class="me-2 btn btn-danger rounded-circle" onclick="btnremoveattribute(this)">

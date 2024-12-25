@@ -1,6 +1,11 @@
 <?php
 require_once "connectDB.php";
 class news extends connectDB {
+    function count_news(){
+        $sql ="SELECT count(id) as dem FROM news";
+        $row = $this->queryOne($sql);
+        return $row['dem'];
+    }
     function all_news() {
         $sql = "SELECT *
         FROM news";

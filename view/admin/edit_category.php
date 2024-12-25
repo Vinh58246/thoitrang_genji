@@ -55,7 +55,7 @@
 
                                         <div>
                                             <div class="drop-zone">
-                                                <div class="drop-zone__prompt d-flex flex-column"><img class="w-100" src="<?=PUBLIC_URL.'assets/images_product/'.$detail['image']?>" alt="profile-image"></div>
+                                                <div class="drop-zone__prompt d-flex flex-column"><img class="w-100" src="<?=PUBLIC_URL.'assets/image_category/'.$detail['image']?>" alt="profile-image"></div>
                                                 <input type="file" name="image" class="drop-zone__input">
                                             </div>
                                         </div>

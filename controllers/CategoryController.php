@@ -8,6 +8,8 @@ class CategoryController{
 
     }
     function index(){
+        $this->checkusernot();
+
         $allCategories = $this->model->all_categories();
         
         $datatable_js = '<script src="public/assets/js/pages/list_category.init.js"></script>';
@@ -17,6 +19,8 @@ class CategoryController{
         include_once "view/admin/layout.php";
     }
     function create(){
+        $this->checkusernot();
+
         $link_css = Linkfile::LINKCSS[3];
         $link_js = Linkfile::LINKJS[4];
         $view_content = "view/admin/add_category.php";
@@ -24,6 +28,7 @@ class CategoryController{
         
     }
     function store(){
+        $this->checkusernot();
 
         $name_file = $_FILES['image']['name'];
         $temp_file = $_FILES['image']['tmp_name'];
@@ -37,7 +42,7 @@ class CategoryController{
             $notification = false;
         }
         else{
-            move_uploaded_file($temp_file, "public/assets/images_product/$name_file");
+            move_uploaded_file($temp_file, "public/assets/image_category/$name_file");
             $this->model->save_category($name_file, $name, $status, $display_order, $name_slug);
             $notification = true;
         }
@@ -48,6 +53,7 @@ class CategoryController{
         include_once "view/admin/layout.php";
     }
     function show(){
+        $this->checkusernot();
 
         global $params;
         $id = $params['id'];
@@ -60,6 +66,8 @@ class CategoryController{
        
     }
     function edit(){
+        $this->checkusernot();
+
         $id = $_POST['id'];
         
         $detail = $this->model->detail_category($id);
@@ -81,7 +89,7 @@ class CategoryController{
             $notification = true;
         }
         else{
-            move_uploaded_file($temp_file, "public/assets/images_product/$name_file");
+            move_uploaded_file($temp_file, "public/assets/image_category/$name_file");
             $this->model->update_category($id, $name_file, $name, $status, $display_order, $name_slug);
             $notification = true;
         }
@@ -92,6 +100,8 @@ class CategoryController{
         include_once "view/admin/layout.php";
     }
     function destroy(){
+        $this->checkusernot();
+
         try{
             global $params;
             $id = $params['id'];
@@ -100,7 +110,7 @@ class CategoryController{
 
             if($notification == true){
                 $_SESSION['notification']['destroy_list'] = 1;
-                $link_image = "public/assets/images_product/".$detail['image'];
+                $link_image = "public/assets/image_category/".$detail['image'];
                 unlink($link_image);
             }
             else{
@@ -116,6 +126,8 @@ class CategoryController{
         header("location:". ROOT_URL. "categories");
     }
     function destroy_list(){
+        $this->checkusernot();
+
         try{
             // kiểm tra check list có tồn tại không
             if(isset($_POST['check_list'])){
@@ -127,7 +139,7 @@ class CategoryController{
 
                     if($notification == true){
                         $_SESSION['notification']['destroy_list'] = 1;
-                        $link_image = "public/assets/images_product/".$detail['image'];
+                        $link_image = "public/assets/image_category/".$detail['image'];
                         unlink($link_image);
                     }
                     else{
@@ -185,5 +197,11 @@ class CategoryController{
         $string = strtolower($string);
         return $string;
       }
+
+      function checkusernot(){
+        if(!isset($_SESSION['user']) || empty($_SESSION['user']) || empty($_SESSION['user']['email_verified_at'])){
+            header("location:". ROOT_URL. "login");
+        }
+    }
 }
 ?>

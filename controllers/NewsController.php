@@ -8,6 +8,8 @@ class NewsController{
 
     }
     function index(){
+        $this->checkusernot();
+
         $allNews = $this->model->all_news();
 
         $datatable_js = '<script src="public/assets/js/pages/list_news.init.js"></script>';
@@ -17,12 +19,16 @@ class NewsController{
         include_once "view/admin/layout.php";
     }
     function create(){
+        $this->checkusernot();
+
         $link_css = Linkfile::LINKCSS[3];
         $link_js = Linkfile::LINKJS[4]; 
         $view_content = "view/admin/add_news.php";
         include_once "view/admin/layout.php";
     }
     function store(){
+        $this->checkusernot();
+
         // echo "<h1>xin chào</h1>";
         $name_file = $_FILES['avatar']['name'];
         $temp_file = $_FILES['avatar']['tmp_name'];
@@ -50,6 +56,8 @@ class NewsController{
         include_once "view/admin/layout.php";
     }
     function show(){
+        $this->checkusernot();
+
         global $params;
         $id = $params['id'];
         $detail = $this->model->detail_news($id);
@@ -60,6 +68,8 @@ class NewsController{
         include_once "view/admin/layout.php";
     }
     function edit(){
+        $this->checkusernot();
+
         $id = $_POST['id'];
         
         $detail = $this->model->detail_news($id);
@@ -93,6 +103,8 @@ class NewsController{
         include_once "view/admin/layout.php";
     }
     function destroy(){
+        $this->checkusernot();
+
         try{
             global $params;
             $id = $params['id'];
@@ -119,6 +131,8 @@ class NewsController{
         
     }
     function destroy_list(){
+        $this->checkusernot();
+
         try{
             // kiểm tra check list có tồn tại không
             if(isset($_POST['check_list'])){
@@ -186,6 +200,11 @@ class NewsController{
         $string = preg_replace('/\s+/', '-', $string);
         $string = strtolower($string);
         return $string;
+    }
+    function checkusernot(){
+        if(!isset($_SESSION['user']) || empty($_SESSION['user']) || empty($_SESSION['user']['email_verified_at'])){
+            header("location:". ROOT_URL. "login");
+        }
     }
 }
 ?>

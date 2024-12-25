@@ -1,6 +1,11 @@
 <?php
 require_once "connectDB.php";
 class customer extends connectDB {
+    function count_user(){
+        $sql ="SELECT count(id) as dem FROM users";
+        $row = $this->queryOne($sql);
+        return $row['dem'];
+    }
     function all_users() {
         $sql = "SELECT * FROM users WHERE role != 'admin'";
         return $this ->query($sql);

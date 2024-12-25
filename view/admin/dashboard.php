@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="text-end">
-                                            <h3 class="text-dark mt-1"><span data-plugin="counterup">5</span></h3>
+                                            <h3 class="text-dark mt-1"><span data-plugin="counterup"><?=$quantitycate?></span></h3>
                                             <p class="text-muted mb-1 text-truncate">Danh mục</p>
                                         </div>
                                     </div>
@@ -65,7 +65,7 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="text-end">
-                                            <h3 class="text-dark mt-1"><span data-plugin="counterup">127</span></h3>
+                                            <h3 class="text-dark mt-1"><span data-plugin="counterup"><?=$quantitypro?></span></h3>
                                             <p class="text-muted mb-1 text-truncate">Sản phẩm</p>
                                         </div>
                                     </div>
@@ -86,7 +86,7 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="text-end">
-                                            <h3 class="text-dark mt-1"><span data-plugin="counterup">7</span></h3>
+                                            <h3 class="text-dark mt-1"><span data-plugin="counterup"><?=$quantitynews?></span></h3>
                                             <p class="text-muted mb-1 text-truncate">Bài viết</p>
                                         </div>
                                     </div>
@@ -107,7 +107,7 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="text-end">
-                                            <h3 class="text-dark mt-1"><span data-plugin="counterup">7</span></h3>
+                                            <h3 class="text-dark mt-1"><span data-plugin="counterup"><?=$quantitycus?></span></h3>
                                             <p class="text-muted mb-1 text-truncate">Người dùng</p>
                                         </div>
                                     </div>

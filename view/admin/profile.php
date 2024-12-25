@@ -26,7 +26,7 @@
 
                                             <div class="position-relative d-inline-block">
                                                 <div class="drop-avatar">
-                                                    <div class="drop-avatar__prompt d-flex flex-column"><img src="public/assets/images/users/<?=$_SESSION['user']['avatar']?>" style="object-fit: cover;" class="rounded-circle avatar-lg img-thumbnail"
+                                                    <div class="drop-avatar__prompt d-flex flex-column"><img src="public/assets/image_user/<?=$_SESSION['user']['avatar']?>" style="object-fit: cover;" class="rounded-circle avatar-lg img-thumbnail"
                                                     alt="profile-image"></div>
                                                     <input type="file" name="avatar" class="drop-avatar__input">
                                                 </div>

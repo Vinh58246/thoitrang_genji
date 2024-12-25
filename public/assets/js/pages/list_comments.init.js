@@ -6,7 +6,7 @@ $(document).ready(function () {
           previous: "<i class='mdi mdi-chevron-left'>",
           next: "<i class='mdi mdi-chevron-right'>",
         },
-        info: "Showing customers _START_ to _END_ of _TOTAL_",
+        info: "Hiển thị kết quả _START_ đến _END_ của _TOTAL_",
         lengthMenu:
           'Hiện <select class=\'form-select form-select-sm ms-1 me-1\'><option value="10">10</option><option value="20">20</option><option value="-1">All</option></select> danh sách',
       },
@@ -15,10 +15,11 @@ $(document).ready(function () {
         {
           orderable: !1,
           render: function (e, l, a, o) {
+            var checkboxvalue = e;
             return (
               "display" === l &&
                 (e =
-                  '<div class="form-check"><input type="checkbox" class="form-check-input dt-checkboxes"><label class="form-check-label">&nbsp;</label></div>'),
+                  '<div class="form-check"><input type="checkbox" name="check_list[]" value="'+checkboxvalue+'" class="form-check-input dt-checkboxes"><label class="form-check-label">&nbsp;</label></div>'),
               e
             );
           },
@@ -33,10 +34,12 @@ $(document).ready(function () {
         { orderable: !0 },
         { orderable: !0 },
         { orderable: !0 },
+        { orderable: !0 },
+        { orderable: !0 },
         { orderable: !1 },
       ],
       select: { style: "multi" },
-      order: [[5, "asc"]],
+      order: [[6, "sort"]],
       drawCallback: function () {
         $(".dataTables_paginate > .pagination").addClass("pagination-rounded"),
           $(".dataTables_length label").addClass("form-label"),

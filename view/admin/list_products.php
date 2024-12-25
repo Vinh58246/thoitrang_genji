@@ -98,6 +98,11 @@
 
                                                     <?php
                                                         foreach ($allProducts as $i) {
+                                                            $totalvaluate = ($i['totalevaluate'] != '') ? $i['totalevaluate'] : 0;
+                                                            $sosao = 0;
+                                                            if (!empty($i['quantitycomments']) && $i['quantitycomments'] != 0) {
+                                                                $sosao = round((int) $totalvaluate / $i['quantitycomments'], 1);
+                                                            }
                                                     ?>
                                                         <tr>
                                                             <td>
@@ -111,10 +116,10 @@
                                                                 <?=number_format($i['price'])?> VNĐ
                                                             </td>
                                                             <td>
-                                                                0
+                                                                <?=$i['quantitycomments']?>
                                                             </td>
                                                             <td>
-                                                                30
+                                                                <?=($i['allquantity'] != '') ? $i['allquantity'] : 0?>
                                                             </td>
                                                             <td>
                                                                 <?=($i['hot'] == 0) ? '<span class="badge badge-soft-success">Bình thường</span>' : '<span class="badge badge-soft-warning">Nổi bật</span>'?>
@@ -122,7 +127,7 @@
                                                             <td>
                                                                 <?=($i['status'] == 0) ? '<span class="badge badge-soft-success">Còn hàng</span>' : '<span class="badge badge-soft-warning">Hết hàng</span>'?>
                                                             </td>
-                                                            <td><i class="mdi mdi-star text-warning"></i> 4.9</td>
+                                                            <td><i class="mdi mdi-star text-warning"></i> <?=$sosao?> </td>
                                                             
                                                             <td>
                                                                 <a href="detail_product?id=<?=$i['id']?>" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>

@@ -84,7 +84,7 @@
                                                                 <?=$i['id']?>
                                                             </td>
                                                             <td class="table-user">
-                                                                <img src="<?=PUBLIC_URL.'assets/images_product/'.$i['image']?>" alt="table-user" class="me-2 rounded-circle">
+                                                                <img src="<?=PUBLIC_URL.'assets/image_category/'.$i['image']?>" alt="table-user" class="me-2 rounded-circle">
                                                                 <a href="javascript:void(0);" class="text-body fw-semibold"><?=$i['name']?></a>
                                                             </td>
                                                             <td>

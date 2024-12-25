@@ -77,7 +77,7 @@
                                                             <?=$i['id']?>
                                                         </td>
                                                         <td class="table-user">
-                                                            <img src="public/assets/images/users/<?=$i['avatar']?>?>" alt="table-user" class="me-2 rounded-circle">
+                                                            <img src="public/assets/image_user/<?=$i['avatar']?>?>" alt="table-user" class="me-2 rounded-circle">
                                                             <a href="javascript:void(0);" class="text-body fw-semibold"><?=$i['fullname']?></a>
                                                         </td>
                                                         <td>

@@ -7,5 +7,6 @@
 </head>
 <body>
     <h1>Home</h1>
+    <a href="dashboard">quản lý</a>
 </body>
 </html>

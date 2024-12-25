@@ -35,7 +35,7 @@
                     <ul class="list-unstyled topnav-menu float-end mb-0">
                         <li class="dropdown notification-list topbar-dropdown">
                             <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                <img src="public/assets/images/users/<?=$_SESSION['user']['avatar']?>" style="object-fit: cover;" alt="user-image" class="rounded-circle">
+                                <img src="public/assets/image_user/<?=$_SESSION['user']['avatar']?>" style="object-fit: cover;" alt="user-image" class="rounded-circle">
                                 <span class="pro-user-name ms-1">
                                 <?=$_SESSION['user']['fullname']?> <i class="mdi mdi-chevron-down"></i> 
                                 </span>

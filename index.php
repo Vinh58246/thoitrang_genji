@@ -43,6 +43,7 @@ $router = [
 
         // bình luận
         'comments' => [new CommentController, 'index'],
+        'destroy_comment' => [new CommentController, 'destroy'],
         
         // thông tin
         'profile' => [new ProfileController, 'index'],
@@ -92,9 +93,11 @@ $router = [
         'edit_news' => [new NewsController, 'edit'],
         'destroy_news' => [new NewsController, 'destroy_list'],
 
-        // customer
+        // người dùng
         'destroy_user' => [new UserController, 'destroy_list'],
         
+        // bình luận
+        'destroy_comment' => [new CommentController, 'destroy_list'],
         
         'edit_profile' => [new ProfileController, 'edit'],
         
@@ -108,6 +111,8 @@ $router = [
         '__recover_pw' => [new ARecoverPw, 'store'],
         
         '__changepw' => [new ALockScreen, 'edit'],
+
+        'updateorder' => [new OrderController, 'edit'],
 
     ]
 ];

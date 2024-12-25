@@ -5,7 +5,7 @@
 
     <!-- User box -->
     <div class="user-box text-center">
-        <img src="public/assets/images/users/<?=$_SESSION['user']['avatar']?>" style="object-fit: cover;" alt="user-img" title="Mat Helme"
+        <img src="public/assets/image_user/<?=$_SESSION['user']['avatar']?>" style="object-fit: cover;" alt="user-img" title="Mat Helme"
             class="rounded-circle avatar-md">
         <div class="dropdown">
             <a href="javascript: void(0);" class="text-dark dropdown-toggle h5 mt-2 mb-1 d-block"

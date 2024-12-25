@@ -8,6 +8,8 @@ class ProfileController{
 
     }
     function index(){
+        $this->checkusernot();
+
         $link_css = Linkfile::LINKCSS[3];
         $link_js = Linkfile::LINKJS[3]; 
         $view_content = "view/admin/profile.php";
@@ -15,6 +17,8 @@ class ProfileController{
     }
 
     function edit(){
+        $this->checkusernot();
+
         $name_file = $_FILES['avatar']['name'];
         $temp_file = $_FILES['avatar']['tmp_name'];
         $fullname = ($_POST['fullname'] != '') ? $_POST['fullname'] : $_SESSION['user']['fullname'];
@@ -32,6 +36,11 @@ class ProfileController{
         $link_js = Linkfile::LINKJS[3]; 
         $view_content = "view/admin/profile.php";
         include_once "view/admin/layout.php";
+    }
+    function checkusernot(){
+        if(!isset($_SESSION['user']) || empty($_SESSION['user']) || empty($_SESSION['user']['email_verified_at'])){
+            header("location:". ROOT_URL. "login");
+        }
     }
 }
 ?>

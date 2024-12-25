@@ -57,5 +57,10 @@ class variantProduct extends connectDB {
         return $this ->query($sql);
     }
 
+    function show_value_attributes($id){
+        $sql = "SELECT value_variant FROM variant_attribute WHERE id = $id";
+        return $this ->queryOne($sql);
+    }
+
 
 }
