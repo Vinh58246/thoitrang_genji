@@ -167,6 +167,18 @@
                                 content.value = framewriting[0].innerHTML;
                             }
                         });
+
+                        // function encodeHTML(html) {
+                        //     return html.replace(/[/\\:;*?"'|]/gim, function(i) {
+                        //         if(i.charCodeAt(0) == 34){
+                        //             return "'"; // "
+                        //         }
+                        //         if(i.charCodeAt(0) == 47 || i.charCodeAt(0) == 92 || i.charCodeAt(0) == 58 || i.charCodeAt(0) == 59 || i.charCodeAt(0) == 42 || i.charCodeAt(0) == 63 || i.charCodeAt(0) == 39 || i.charCodeAt(0) == 124){
+                        //             // 47 = /, 92 = \, 58 = :, 59 = ;, 42 = *, 63 = ?, 39 = ', 124 = |
+                        //             return '&#' + i.charCodeAt(0) + ';';
+                        //         }
+                        //     });
+                        // }
                     });
 
                 </script>

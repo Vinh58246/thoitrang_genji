@@ -32,7 +32,7 @@ class NewsController{
         // echo "<h1>xin chào</h1>";
         $name_file = $_FILES['avatar']['name'];
         $temp_file = $_FILES['avatar']['tmp_name'];
-        $content = $_POST['content'];
+        $content = $this->encodeHTML($_POST['content']);
         $title = trim(strip_tags($_POST['title']));
         $title_slug = $this->name_slug($title);
         $status = (int) $_POST['status'];
@@ -76,7 +76,7 @@ class NewsController{
 
         $name_file = $_FILES['avatar']['name'];
         $temp_file = $_FILES['avatar']['tmp_name'];
-        $content = $_POST['content'];
+        $content = $this->encodeHTML($_POST['content']);
         $title = trim(strip_tags($_POST['title']));
         $title_slug = $this->name_slug($title);
         $status = (int) $_POST['status'];
@@ -200,6 +200,26 @@ class NewsController{
         $string = preg_replace('/\s+/', '-', $string);
         $string = strtolower($string);
         return $string;
+    }
+    function encodeHTML($html) {
+        return preg_replace_callback(
+            '/[\"]/',
+            function ($matches) {
+                $char = $matches[0];
+                $charCode = ord($char);
+    
+                // Xử lý trường hợp ký tự đặc biệt
+                if ($charCode === 34) { // 34 = "
+                    return "'";
+                }
+    
+                // Các ký tự cần mã hóa: /, \, :, ;, *, ?, ', |
+                // if (in_array($charCode, [47, 92, 58, 59, 42, 63, 39, 124])) {
+                //     return "&#" . $charCode . ";";
+                // }
+            },
+            $html
+        );
     }
     function checkusernot(){
         if(!isset($_SESSION['user']) || empty($_SESSION['user']) || empty($_SESSION['user']['email_verified_at'])){
